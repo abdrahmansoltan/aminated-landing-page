@@ -152,3 +152,6 @@ main {
   top: -15%;
 }
 
+.scrollmagic-pin-spacer {
+  position: static !important;
+}
