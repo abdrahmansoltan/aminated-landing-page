@@ -1,6 +1,8 @@
 let controller;
 let slideScene;
 let pageScene;
+const mouse = document.querySelector('.cursor');
+const mouseTxt = mouse.querySelector('span');
 
 function animateSlides() {
   // Init Controller
@@ -62,4 +64,36 @@ function animateSlides() {
   });
 }
 
+function cursor(e) {
+  mouse.style.top = e.pageY + 'px';
+  mouse.style.left = e.pageX + 'px';
+}
+
+function activeCursor(e) {
+  const item = e.target;
+
+  // If the item is a link, the cursor will be a pointer
+  if (item.id === 'logo' || item.classList.contains('burger')) {
+    mouse.classList.add('nav-active');
+  } else {
+    mouse.classList.remove('nav-active');
+  }
+
+  // If the item is an explore link, the cursor will be a circle
+  if (item.classList.contains('explore')) {
+    mouse.classList.add('explore-active');
+    mouseTxt.innerText = 'Tap';
+    gsap.to('.title-swipe', 1, { y: '0%' }); // animate the title-swipe element to move up
+  } else {
+    mouse.classList.remove('explore-active');
+    mouseTxt.innerText = '';
+    gsap.to('.title-swipe', 1, { y: '100%' }); // animate the title-swipe element to move down
+  }
+}
+
+// Event Listeners
+window.addEventListener('mousemove', cursor);
+window.addEventListener('mouseover', activeCursor);
+
+// Methods to run
 animateSlides();
