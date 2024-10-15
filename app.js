@@ -3,6 +3,7 @@ let slideScene;
 let pageScene;
 const mouse = document.querySelector('.cursor');
 const mouseTxt = mouse.querySelector('span');
+const burger = document.querySelector('.burger');
 
 function animateSlides() {
   // Init Controller
@@ -91,9 +92,29 @@ function activeCursor(e) {
   }
 }
 
+function navToggle(e) {
+  if (!e.target.classList.contains('active')) {
+    e.target.classList.add('active');
+    // Animate the burger menu by rotating the lines and changing the background color of the logo and the nav-bar
+    gsap.to('.line1', 0.5, { rotate: '45', y: 5, background: 'black' });
+    gsap.to('.line2', 0.5, { rotate: '-45', y: -5, background: 'black' });
+    gsap.to('#logo', 1, { color: 'black' });
+    gsap.to('.nav-bar', 1, { clipPath: 'circle(2500px at 100% -10%)' }); // Expanding the clipPath to reveal the nav-bar as it already has a clipPath of `circle(50px at 100% -10%)` in the CSS
+    document.body.classList.add('hide'); // to disable scrolling when the nav-bar is open
+  } else {
+    e.target.classList.remove('active');
+    gsap.to('.line1', 0.5, { rotate: '0', y: 0, background: 'white' });
+    gsap.to('.line2', 0.5, { rotate: '0', y: 0, background: 'white' });
+    gsap.to('#logo', 1, { color: 'white' });
+    gsap.to('.nav-bar', 1, { clipPath: 'circle(50px at 100% -10%)' });
+    document.body.classList.remove('hide'); // to enable scrolling when the nav-bar is closed
+  }
+}
+
 // Event Listeners
 window.addEventListener('mousemove', cursor);
 window.addEventListener('mouseover', activeCursor);
+burger.addEventListener('click', navToggle);
 
 // Methods to run
 animateSlides();

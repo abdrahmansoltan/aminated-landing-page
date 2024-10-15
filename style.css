@@ -206,3 +206,7 @@ main {
 .scrollmagic-pin-spacer {
   position: static !important;
 }
+body.hide {
+  overflow: hidden; /* Hiding the scrollbar when the body has the hide class */
+}
+
