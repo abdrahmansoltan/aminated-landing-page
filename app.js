@@ -111,10 +111,59 @@ function navToggle(e) {
   }
 }
 
+// Barba Page Transitions
+const logo = document.querySelector('#logo');
+barba.init({
+  views: [
+    {
+      namespace: 'home',
+      beforeEnter() {
+        animateSlides(); // run the animateSlides function when entering the home page
+        logo.href = './index.html'; // change the href of the logo to the home page
+      },
+      beforeLeave() {
+        // Destroy the scroll magic scenes when leaving the home page to prevent memory leaks
+        slideScene.destroy();
+        pageScene.destroy();
+        controller.destroy();
+      }
+    },
+    {
+      namespace: 'fashion',
+      beforeEnter() {
+        logo.href = '../index.html'; // change the href of the logo to the home
+        gsap.fromTo('.nav-header', 1, { y: '-100%' }, { y: '0%', ease: 'power2.inOut' }); // animate the nav-header to move down
+      },
+      beforeLeave() {
+        slideScene.destroy();
+        pageScene.destroy();
+        controller.destroy();
+      }
+    }
+  ],
+  transitions: [
+    {
+      leave({ current, next }) {
+        let done = this.async();
+        // An animation
+        const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+        tl.fromTo(current.container, 1, { opacity: 1 }, { opacity: 0 });
+        tl.fromTo('.swipe', 0.75, { x: '-100%' }, { x: '0%', onComplete: done }, '-=0.5');
+      },
+      enter({ current, next }) {
+        let done = this.async(); // to tell Barba that the animation is done in the old page and it can move to the new page
+        // Scroll to the top on page load
+        window.scrollTo(0, 0);
+        // An animation
+        const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+        tl.fromTo('.swipe', 1, { x: '0%' }, { x: '100%', stagger: 0.25, onComplete: done });
+        tl.fromTo(next.container, 1, { opacity: 0 }, { opacity: 1 });
+      }
+    }
+  ]
+});
+
 // Event Listeners
 window.addEventListener('mousemove', cursor);
 window.addEventListener('mouseover', activeCursor);
 burger.addEventListener('click', navToggle);
-
-// Methods to run
-animateSlides();
