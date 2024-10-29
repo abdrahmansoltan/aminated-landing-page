@@ -132,7 +132,7 @@ barba.init({
       namespace: 'fashion',
       beforeEnter() {
         logo.href = '../index.html'; // change the href of the logo to the home
-        gsap.fromTo('.nav-header', 1, { y: '-100%' }, { y: '0%', ease: 'power2.inOut' }); // animate the nav-header to move down
+        detailAnimation(); // run the detailAnimation function when entering the fashion page
       },
       beforeLeave() {
         slideScene.destroy();
@@ -158,10 +158,39 @@ barba.init({
         const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
         tl.fromTo('.swipe', 1, { x: '0%' }, { x: '100%', stagger: 0.25, onComplete: done });
         tl.fromTo(next.container, 1, { opacity: 0 }, { opacity: 1 });
+        tl.fromTo('.nav-header', 1, { y: '-100%' }, { y: '0%', ease: 'power2.inOut' }); // animate the nav-header to move down
       }
     }
   ]
 });
+
+function detailAnimation() {
+  controller = new ScrollMagic.Controller();
+  const slides = document.querySelectorAll('.detail-slide');
+  slides.forEach((slide, index, slides) => {
+    const slideTl = gsap.timeline({ defaults: { duration: 1 } });
+    let nextSlide = slides.length - 1 === index ? 'end' : slides[index + 1];
+    const nextImg = nextSlide.querySelector('img');
+    slideTl.fromTo(slide, { opacity: 1 }, { opacity: 0 }); // fade out the current slide
+    slideTl.fromTo(nextSlide, { opacity: 0 }, { opacity: 1 }, '-=1'); // fade in the next slide
+    slideTl.fromTo(nextImg, { x: '50%' }, { x: '0%' }); // move the next image from 50% to 0% of the width
+
+    // Create Scene
+    pageScene = new ScrollMagic.Scene({
+      triggerElement: slide,
+      duration: '100%',
+      triggerHook: 0
+    })
+      .setPin(slide, { pushFollowers: false })
+      .setTween(slideTl)
+      .addIndicators({
+        colorStart: 'white',
+        colorTrigger: 'white',
+        name: 'detailScene'
+      })
+      .addTo(controller);
+  });
+}
 
 // Event Listeners
 window.addEventListener('mousemove', cursor);
