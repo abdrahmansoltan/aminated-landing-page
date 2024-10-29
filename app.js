@@ -32,11 +32,6 @@ function animateSlides() {
       reverse: false // if we don't want the animation to reverse when we scroll up
     })
       .setTween(slideTl) // setTween is a method that takes a timeline as an argument and applies it to the scene so that the animation runs when the scene is triggered
-      .addIndicators({
-        colorStart: 'white',
-        colorTrigger: 'white',
-        name: 'slide'
-      })
       .addTo(controller);
 
     // ------------------ GSAP Animation 2 ------------------ //
@@ -55,12 +50,6 @@ function animateSlides() {
     })
       .setPin(slide, { pushFollowers: false })
       .setTween(pageTl)
-      .addIndicators({
-        colorStart: 'white',
-        colorTrigger: 'white',
-        name: 'page',
-        indent: 200
-      })
       .addTo(controller);
   });
 }
@@ -183,11 +172,6 @@ function detailAnimation() {
     })
       .setPin(slide, { pushFollowers: false })
       .setTween(slideTl)
-      .addIndicators({
-        colorStart: 'white',
-        colorTrigger: 'white',
-        name: 'detailScene'
-      })
       .addTo(controller);
   });
 }
